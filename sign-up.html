@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="signin-styles.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="centered-div">
+        <div class="sign-up-box">
+            
+            <table >
+               <form action="/Databse/save.php" method="POST">
+                    <tr >
+                        <td colspan="2">
+                            <h3>Sign Up Form</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-style">
+                            <label for="">Name</label>
+                        </td>
+                        <td>
+                            <label for="">Lastname</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-style">
+                            <input type="text" name="member_name" id="" placeholder="Enter your Name" required>
+                        </td>
+                        <td class="td-style">
+                            <input type="text" name="member_lastname" id="" placeholder="Enter your Lastname" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-style">
+                            <label for="">Email</label>
+                        </td>
+                        <td class="td-style">
+                            <label for="">Class</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-style">
+                            <input type="email" name="member_email" id="" placeholder="Enter your E-mail" required>
+                        </td>
+                        <td class="td-style">
+                            <input type="text" name="member_class" id="" placeholder="Enter your Class" required>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="td-style">
+                            <label for="">Password</label>
+                        </td>
+                        <td class="td-style">
+                            <label for="">Number</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-style">
+                            <input type="password" name="member_password" placeholder="Enter your Password" required>
+                        </td>
+                        <td class="td-style">
+                            <input type="number" name="member_number" id="" placeholder="Enter your number" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-style">
+                            <label for="">Confirm Password</label>
+                        </td>
+                        <td class="td-style">
+                            <label for="">Department</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-style">
+                            <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+                        </td>
+                        <td class="td-style">
+                            <input type="text" name="member_department" id="" placeholder="Enter your Department" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="sign-in-button" type="submit">Sign Up</button>
+                        </td>
+                    </tr>
+                    
+               </form>
+            </table>
+            
+            <a href="sign-in.html">Login</a>
+        </div>
+    </div>
+</body>
+</html>

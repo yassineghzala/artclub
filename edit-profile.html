@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit Profile - ArtVibe Club</title>
+    <link rel="stylesheet" href="profile-styles.css">
+    <style>
+        /* Improved edit form styles */
+        body { background: #f6f7fb; }
+        main { padding: 20px; }
+        .edit-card{
+            max-width:720px;
+            margin:30px auto;
+            padding:28px;
+            background: linear-gradient(180deg,#ffffff,#fbfbff);
+            border-radius:12px;
+            box-shadow:0 10px 30px rgba(50,50,93,0.08);
+            border:1px solid rgba(99,102,241,0.06);
+        }
+        .edit-card h2{margin-bottom:12px;color:#2b2f81;font-weight:700}
+        .edit-row{display:flex;gap:12px;margin-bottom:14px}
+        .edit-row .col{flex:1}
+        .edit-card label{display:block;font-size:0.9rem;color:#444;margin-bottom:6px;font-weight:600}
+        .edit-card input[type="text"], .edit-card input[type="email"]{
+            width:100%;
+            padding:10px 12px;
+            border:1px solid #e6e9f2;
+            border-radius:8px;
+            background:#fff;
+            font-size:0.95rem;
+            transition:box-shadow .15s,border-color .15s;
+        }
+        .edit-card input:focus{outline:none;border-color:#6c7ae0;box-shadow:0 8px 20px rgba(108,122,224,0.12)}
+        .form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+        .btn-primary{border-radius:8px;padding:10px 14px}
+        .btn-secondary{border-radius:8px;padding:10px 14px;background:#f1f1f5;border:1px solid #e9e9f9}
+        @media(max-width:600px){.edit-row{flex-direction:column}}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>ArtVibe Club</h1>
+        </div>
+    </header>
+
+    <main>
+        <div class="edit-card">
+            <h2>Edit Profile</h2>
+            <form id="edit-form">
+                <div class="edit-row">
+                    <div class="col">
+                        <label for="name">Name</label>
+                        <input id="name" name="name" type="text" required>
+                    </div>
+                    <div class="col">
+                        <label for="role">Role</label>
+                        <input id="role" name="role" type="text">
+                    </div>
+                </div>
+
+                <div class="edit-row">
+                    <div class="col">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email" required>
+                    </div>
+                    <div class="col">
+                        <label for="major">Major</label>
+                        <input id="major" name="major" type="text">
+                    </div>
+                </div>
+
+                <div class="edit-row">
+                    <div class="col">
+                        <label for="joined">Joined</label>
+                        <input id="joined" name="joined" type="text">
+                    </div>
+                    <div class="col">
+                        <label for="bio">Bio</label>
+                        <input id="bio" name="bio" type="text">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancel">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // Prefill form from query or fallback sample data
+        (function () {
+            function qs(name){
+                const params = new URLSearchParams(location.search);
+                return params.get(name);
+            }
+
+            const memberId = qs('memberId') || '';
+            // Simple static mapping for demo — in real app, fetch from server
+            const samples = {
+                'member-001': {
+                    name: 'Sarah Johnson',
+                    email: 'sarah.j@university.edu',
+                    major: 'Fine Arts',
+                    role: 'President',
+                    joined: 'Jan 2023',
+                    bio: 'Creative director, painting & mixed media.'
+                }
+            };
+
+            const data = samples[memberId] || {name:'', email:'', major:'', role:'', joined:'', bio:''};
+            document.getElementById('name').value = data.name;
+            document.getElementById('email').value = data.email;
+            document.getElementById('major').value = data.major;
+            document.getElementById('role').value = data.role;
+            document.getElementById('joined').value = data.joined;
+            document.getElementById('bio').value = data.bio;
+
+            document.getElementById('cancel').addEventListener('click', function(){
+                // go back to profile
+                location.href = 'member-profile.html';
+            });
+
+            document.getElementById('edit-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                // For static demo, just show a confirmation and return to profile
+                alert('Profile saved (demo). Returning to profile.');
+                location.href = 'member-profile.html';
+            });
+        })();
+    </script>
+</body>
+</html>

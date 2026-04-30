@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Event Details - ArtVibe Club</title>
+    <link rel="stylesheet" href="members-styles.css">
+    <style>
+        body{background:#f6f7fb;font-family:Arial,Helvetica,sans-serif;color:#222}
+        .container{max-width:1000px;margin:0 auto;padding:20px}
+        .event-card{background:#fff;border-radius:12px;padding:26px;box-shadow:0 10px 30px rgba(34,36,76,0.06);border:1px solid rgba(99,102,241,0.06)}
+        .event-header{display:flex;gap:20px;align-items:flex-start}
+        .event-image{width:260px;height:160px;object-fit:cover;border-radius:10px;flex-shrink:0}
+        .event-meta h1{margin:0 0 6px 0;color:#2b2f81;font-size:1.6rem}
+        .event-meta p{margin:6px 0;color:#555}
+        .event-details{margin-top:18px;color:#444;line-height:1.6}
+        .actions{display:flex;gap:10px;margin-top:18px}
+        .participating{background:#2f855a;color:#fff}
+        .note{color:#666;margin-top:10px}
+        @media (max-width:720px){
+            .event-header{flex-direction:column;align-items:stretch}
+            .event-image{width:100%;height:200px;border-radius:8px}
+            .event-meta{margin-top:10px}
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h2>ArtVibe Club</h2>
+        </header>
+
+        <div class="event-card" id="event-card">
+            <div class="event-header">
+                <img id="event-image" class="event-image" src="post-image.jpg" alt="event">
+                <div class="event-meta">
+                    <h1 id="event-title">Event Title</h1>
+                    <p id="event-date">Dec 15 · 6:00 PM - 9:00 PM</p>
+                    <p id="event-location">Student Gallery, Building A</p>
+                    <div class="actions">
+                        <button id="participate-btn" class="btn-primary">Participate</button>
+                        <a href="members-page.html" class="btn-secondary">Back to Members</a>
+                    </div>
+                    <div id="participation-note" class="note" aria-live="polite"></div>
+                </div>
+            </div>
+
+            <div class="event-details" id="event-details">
+                <h3>About this event</h3>
+                <p id="event-description">Full event description goes here. This is a static demo page showing details about the selected event.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Render event details based on ?eventId= query parameter and enable participate
+        (function(){
+            function qs(name){ const p = new URLSearchParams(location.search); return p.get(name); }
+            const id = qs('eventId') || '1';
+
+            // Sample events map
+            const events = {
+                '1':{
+                    title: 'Winter Art Exhibition',
+                    date: 'Dec 15 · 6:00 PM - 9:00 PM',
+                    location: 'Student Gallery, Building A',
+                    img: 'post-image.jpg',
+                    desc: 'Annual showcase of member artwork. Join us to view paintings, sculpture and multimedia pieces.'
+                },
+                '2':{
+                    title: 'Photography Workshop',
+                    date: 'Dec 20 · 3:00 PM - 5:00 PM',
+                    location: 'Media Lab, Building C',
+                    img: 'post-image2.jpg',
+                    desc: 'Learn portrait photography techniques with hands-on exercises led by club officers.'
+                },
+                '3':{
+                    title: 'Club Meeting',
+                    date: 'Jan 05 · 5:00 PM - 7:00 PM',
+                    location: 'Club Room 302',
+                    img: 'post-image3.jpg',
+                    desc: 'Monthly planning and social gathering — all members welcome to propose ideas and volunteer.'
+                }
+            };
+
+            const ev = events[id] || events['1'];
+            document.getElementById('event-title').textContent = ev.title;
+            document.getElementById('event-date').textContent = ev.date;
+            document.getElementById('event-location').textContent = ev.location;
+            document.getElementById('event-image').src = ev.img;
+            document.getElementById('event-description').textContent = ev.desc;
+
+            const key = 'participate_event_' + id;
+            const btn = document.getElementById('participate-btn');
+            const note = document.getElementById('participation-note');
+
+            function updateState(){
+                const joined = localStorage.getItem(key) === '1';
+                if(joined){ btn.textContent = 'You are participating'; btn.classList.add('participating'); btn.disabled = true; note.textContent = 'You are signed up for this event.'; }
+                else { btn.textContent = 'Participate'; btn.classList.remove('participating'); btn.disabled = false; note.textContent = ''; }
+            }
+
+            btn.addEventListener('click', function(){
+                localStorage.setItem(key,'1');
+                updateState();
+                alert('Participation recorded (demo).');
+            });
+
+            updateState();
+        })();
+    </script>
+</body>
+</html>

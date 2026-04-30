@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="profile-styles.css">
+        <title>Member Profile - ArtVibe Club</title>
+    </head>
+    <body class="member-view" data-member-id="member-001">
+        <nav>
+            <div class="container">
+                <div class="nav-left">
+                    <a class="nav-brand" href="index.html">ArtVibe Club</a>
+                </div>
+                <ul>
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="members-page.html">Members</a></li>
+                    <li><a href="members-page.html#add-member">Add Member</a></li>
+                    <li><a href="members-page.html#events">Events</a></li>
+                    <li><a href="member-profile.html">My Profile</a></li>
+                </ul>
+                <img class="profile-image" src="post-image3.jpg" alt="profile">
+            </div>
+        </nav>
+
+        <div class="profile-main container">
+
+            <aside class="profile-info">
+                <div class="profile-header">
+                    <img class="profile-avatar" src="post-image3.jpg" alt="Member avatar">
+                    <div class="profile-meta">
+                        <h2 id="member-name">Sarah Johnson</h2>
+                        <div class="role-row"><span class="badge badge-president">President</span></div>
+                        <p class="member-bio">Creative director, painting & mixed media. Loves community shows and workshops.</p>
+                    </div>
+                </div>
+
+                <div class="info-list">
+                    <div class="info-row"><strong>Email:</strong> <span id="member-email">sarah.j@university.edu</span></div>
+                    <div class="info-row"><strong>Major:</strong> <span id="member-major">Fine Arts</span></div>
+                    <div class="info-row"><strong>Joined:</strong> <span id="member-joined">Jan 2023</span></div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-primary" id="edit-profile">Edit Profile</button>
+                    <button class="btn-secondary" id="sign-out">Sign Out</button>
+                </div>
+            </aside>
+
+            <section class="member-tasks">
+                <h2>My Tasks</h2>
+                <p class="member-note">Tasks are assigned by administrators — you can mark them complete.</p>
+
+                <ul class="task-list" id="task-list"></ul>
+            </section>
+
+        </div>
+
+        <script>
+            // Member-only view: show only tasks assigned to current member and prevent member deletes/adds
+            document.addEventListener('DOMContentLoaded', function () {
+                const body = document.body;
+                const memberId = body.dataset.memberId || '';
+                const isMemberView = body.classList.contains('member-view');
+                const taskList = document.getElementById('task-list');
+
+                // Render tasks dynamically from localStorage 'tasks_list'
+                function loadTasks(){
+                    try{ return JSON.parse(localStorage.getItem('tasks_list') || '[]'); }catch(e){ return [] }
+                }
+
+                function renderTasksForMember(){
+                    taskList.innerHTML = '';
+                    const tasks = loadTasks();
+                    tasks.forEach(t => {
+                        const assignedLocal = localStorage.getItem('task_assigned_' + t.id) || null;
+                        const assigned = assignedLocal !== null ? assignedLocal : (t.assigned || '');
+                        if(isMemberView && assigned !== memberId) return;
+                        const li = document.createElement('li');
+                        li.className = 'task-item' + (localStorage.getItem('task_completed_' + t.id) === '1' ? ' completed' : '');
+                        li.dataset.id = t.id;
+                        li.innerHTML = `<label><input type="checkbox" class="task-checkbox" ${localStorage.getItem('task_completed_' + t.id) === '1' ? 'checked' : ''}> ${t.title}</label>
+                            <span class="task-meta">${t.due || ''}</span>
+                            <button class="btn-small btn-delete btn-task-delete">Delete</button>`;
+                        taskList.appendChild(li);
+                    });
+                    // hide delete buttons for members
+                    if(isMemberView) Array.from(taskList.querySelectorAll('.btn-task-delete')).forEach(btn => btn.style.display = 'none');
+                }
+
+                renderTasksForMember();
+
+                // Allow marking tasks complete/incomplete and persist
+                taskList.addEventListener('change', function (e) {
+                    if (e.target.classList.contains('task-checkbox')) {
+                        const li = e.target.closest('.task-item');
+                        if (!li) return;
+                        const id = li.dataset.id;
+                        const completed = e.target.checked;
+                        li.classList.toggle('completed', completed);
+                        if(completed) localStorage.setItem('task_completed_' + id, '1'); else localStorage.removeItem('task_completed_' + id);
+                    }
+                });
+
+                // Prevent member-side deletion via clicks (safety)
+                document.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('btn-task-delete')) {
+                        if (isMemberView) {
+                            // ignore — only admins can delete tasks
+                            e.preventDefault();
+                            return;
+                        }
+                        const li = e.target.closest('.task-item');
+                        if (li) li.remove();
+                    }
+                });
+
+                // Wire Edit Profile button to static edit page, passing memberId
+                const editBtn = document.getElementById('edit-profile');
+                if (editBtn) {
+                    editBtn.addEventListener('click', function () {
+                        // navigate to the static edit page; include member id in query
+                        const qs = memberId ? ('?memberId=' + encodeURIComponent(memberId)) : '';
+                        window.location.href = 'edit-profile.html' + qs;
+                    });
+                }
+            });
+        </script>
+    </body>
+    </html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin — Edit Member</title>
+    <link rel="stylesheet" href="profile-styles.css">
+    <style>
+        .admin-card{max-width:760px;margin:30px auto;padding:20px;background:#fff;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.06)}
+        .task-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+        .task-row{display:flex;align-items:center;gap:12px;padding:10px;border:1px solid #f0f0f0;border-radius:8px}
+        .task-row label{flex:1}
+        .form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Admin — Edit Member</h1>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="admin-card">
+            <h2 id="member-title">Edit Member</h2>
+            <p id="member-info">Loading...</p>
+
+            <h3>Assign Tasks</h3>
+            <p class="note">Create tasks and assign them to this member. Assignments are saved in your browser (demo).</p>
+
+            <div style="display:flex;gap:8px;margin-bottom:12px">
+                <input id="new-task-title" placeholder="New task title" style="flex:1;padding:8px;border:1px solid #ddd;border-radius:6px">
+                <button id="add-task" class="btn-primary">Add Task</button>
+            </div>
+
+            <ul id="tasks" class="task-list"></ul>
+
+            <div class="form-actions">
+                <a href="index.html" class="btn-secondary">Cancel</a>
+                <button id="save" class="btn-primary">Save Assignments</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        (function(){
+            const params = new URLSearchParams(location.search);
+            const memberId = params.get('memberId') || 'member-001';
+
+            // sample members map (in real app this would come from server)
+            const members = {
+                'member-001': {id:'member-001', name:'Sarah Johnson', email:'sarah.j@university.edu'},
+                'member-002': {id:'member-002', name:'Michael Chen', email:'m.chen@university.edu'},
+                'member-003': {id:'member-003', name:'Emma Williams', email:'e.williams@university.edu'},
+                'member-004': {id:'member-004', name:'James Rodriguez', email:'j.rodriguez@university.edu'},
+                'member-005': {id:'member-005', name:'Olivia Brown', email:'o.brown@university.edu'},
+                'member-006': {id:'member-006', name:'David Kim', email:'d.kim@university.edu'}
+            };
+
+            // load tasks list from localStorage (array of {id,title}) or fallback to sample
+            const TASKS_KEY = 'tasks_list';
+            const tasksSample = [
+                {id:'1', title:'Finalize gallery layout'},
+                {id:'2', title:'Prepare materials for workshop'},
+                {id:'3', title:'Reach out to sponsors'},
+                {id:'4', title:'Create event flyer'}
+            ];
+
+            function loadTasks(){
+                try{
+                    const raw = localStorage.getItem(TASKS_KEY);
+                    if(!raw) return tasksSample.slice();
+                    return JSON.parse(raw);
+                }catch(e){ return tasksSample.slice(); }
+            }
+
+            function saveTasks(list){ localStorage.setItem(TASKS_KEY, JSON.stringify(list)); }
+
+            const member = members[memberId] || {id:memberId, name:'Unknown'};
+            document.getElementById('member-title').textContent = 'Edit — ' + member.name;
+            document.getElementById('member-info').textContent = member.email || '';
+
+            const ul = document.getElementById('tasks');
+
+            function renderTasks(){
+                ul.innerHTML = '';
+                const tasks = loadTasks();
+                tasks.forEach(t => {
+                    const assigned = localStorage.getItem('task_assigned_' + t.id) || null;
+                    const li = document.createElement('li');
+                    li.className = 'task-row';
+                    li.innerHTML = `
+                        <input type="checkbox" class="assign-checkbox" data-task-id="${t.id}" ${assigned===memberId ? 'checked' : ''}>
+                        <label>${t.title}</label>
+                        <small style="color:#666">Assigned: ${assigned || '—'}</small>
+                    `;
+                    ul.appendChild(li);
+                });
+            }
+
+            // add task handler
+            document.getElementById('add-task').addEventListener('click', function(){
+                const input = document.getElementById('new-task-title');
+                const title = (input.value || '').trim();
+                if(!title) return input.focus();
+                const tasks = loadTasks();
+                const id = Date.now().toString();
+                tasks.unshift({id:id, title:title});
+                saveTasks(tasks);
+                input.value = '';
+                renderTasks();
+            });
+
+            renderTasks();
+
+            document.getElementById('save').addEventListener('click', function(){
+                // Iterate checkboxes and write assignments to localStorage
+                Array.from(document.querySelectorAll('.assign-checkbox')).forEach(cb => {
+                    const taskId = cb.dataset.taskId;
+                    const key = 'task_assigned_' + taskId;
+                    if(cb.checked){
+                        localStorage.setItem(key, memberId);
+                    } else {
+                        if(localStorage.getItem(key) === memberId) localStorage.removeItem(key);
+                    }
+                });
+                alert('Assignments saved (demo). Returning to Members list.');
+                location.href = 'index.html';
+            });
+        })();
+    </script>
+</body>
+</html>
