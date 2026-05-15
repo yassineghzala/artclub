@@ -33,7 +33,6 @@ $member = new Member(
     $member_department,
     $join_date,
     $hashed_password
-    
 );
 
 
@@ -75,3 +74,15 @@ $stmt->close();
 $conn->close();
 
 
+CREATE TABLE members (
+    member_id         INT AUTO_INCREMENT PRIMARY KEY,
+    member_name       VARCHAR(45)   NOT NULL,
+    member_lastname   VARCHAR(45)   NOT NULL,
+    member_number     INT(11)       NOT NULL,
+    member_email      VARCHAR(45)   NOT NULL UNIQUE,
+    member_class      VARCHAR(45)   NOT NULL,
+    member_department VARCHAR(45)   NOT NULL,
+    join_date         DATE          NOT NULL,
+    member_password   VARCHAR(255)  NOT NULL,
+    is_admin TINYINT(4)
+);
