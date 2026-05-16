@@ -5,16 +5,19 @@ class Notification {
     public $notification_id;
     public $notification_message;
     public $notification_time;
+    public $notification_status;
 
     public function __construct(
         $notification_id,
         $notification_message,
-        $notification_time
+        $notification_time,
+        $notification_status
     ) {
 
         $this->notification_id = $notification_id;
         $this->notification_message = $notification_message;
         $this->notification_time = $notification_time;
+        $this->notification_status = $notification_status;
 
     }
 
@@ -24,6 +27,7 @@ class Notification {
             'notification_id' => $this->notification_id,
             'notification_message' => $this->notification_message,
             'notification_time' => $this->notification_time,
+            'notification_status' => $this->notification_status
         ];
     }
 
@@ -45,6 +49,11 @@ class Notification {
     public function getNotificationTime(): string
     {
         return $this->notification_time;
+    }
+
+    public function getNotificationStatus(): string
+    {
+        return $this->notification_status;
     }
 
 }
