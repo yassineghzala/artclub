@@ -11,6 +11,7 @@ class Member{
     public $member_department;
     public $join_date;
     public $member_password;
+    private array $tasks = [];
 
     public function __construct(
         $member_id,
@@ -21,7 +22,7 @@ class Member{
         $member_class,
         $member_department,
         $join_date,
-        $member_password) {
+        $member_password,) {
 
         $this->member_id = $member_id;
         $this->member_name = $member_name;
@@ -65,5 +66,18 @@ public function toJson(): string
     public function getJoinDate(): string    { return $this->join_date; }
     public function getPassword(): string    { return $this->member_password; }
 
+    // Add a task to this member
+    // public function addTask(Task $task): void {
+    //     $this->tasks[] = $task;
+    // }
 
+    // // Remove a task
+    // public function removeTask(Task $taskToRemove): void {
+    //     $this->tasks = array_filter(
+    //         $this->tasks,
+    //         fn(Task $task) => $task->getTaskId() !== $taskToRemove->getTaskId()
+    //     );
+    // }
+
+    // public function getTasks(): array  { return $this->tasks; }
 }

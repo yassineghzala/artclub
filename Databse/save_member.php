@@ -1,8 +1,9 @@
 <?php
 
-include 'connect.php';
+include '../config/Database.php';
 require_once '../Models/Member.php';
 
+$conn = Database::getConnection();
 
 $member_name       = $_POST['member_name'];
 $member_lastname   = $_POST['member_lastname'];
@@ -10,7 +11,6 @@ $member_number     = $_POST['member_number'];
 $member_email      = $_POST['member_email'];
 $member_class      = $_POST['member_class'];
 $member_department = $_POST['member_department'];
-
 $member_password = $_POST['member_password']; 
 $confirm_password  = $_POST['confirm_password'];
 
@@ -71,18 +71,18 @@ if ($stmt->execute()) {
 }
 
 $stmt->close();
-$conn->close();
 
 
-CREATE TABLE members (
-    member_id         INT AUTO_INCREMENT PRIMARY KEY,
-    member_name       VARCHAR(45)   NOT NULL,
-    member_lastname   VARCHAR(45)   NOT NULL,
-    member_number     INT(11)       NOT NULL,
-    member_email      VARCHAR(45)   NOT NULL UNIQUE,
-    member_class      VARCHAR(45)   NOT NULL,
-    member_department VARCHAR(45)   NOT NULL,
-    join_date         DATE          NOT NULL,
-    member_password   VARCHAR(255)  NOT NULL,
-    is_admin TINYINT(4)
-);
+
+// CREATE TABLE members (
+//     member_id         INT AUTO_INCREMENT PRIMARY KEY,
+//     member_name       VARCHAR(45)   NOT NULL,
+//     member_lastname   VARCHAR(45)   NOT NULL,
+//     member_number     INT(11)       NOT NULL,
+//     member_email      VARCHAR(45)   NOT NULL UNIQUE,
+//     member_class      VARCHAR(45)   NOT NULL,
+//     member_department VARCHAR(45)   NOT NULL,
+//     join_date         DATE          NOT NULL,
+//     member_password   VARCHAR(255)  NOT NULL,
+//     is_admin TINYINT(4)
+// );
